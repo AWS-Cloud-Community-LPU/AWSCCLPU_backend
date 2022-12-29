@@ -9,6 +9,9 @@ import morganMiddleware from "./middlewares/morganMiddleware.js";
 import errorHandler from "./middlewares/errorMiddleware.js";
 
 import authRouter from "./routes/authRoutes.js";
+import eventRouter from "./routes/eventRoutes.js";
+import memberRouter from "./routes/memberRoutes.js";
+import messageRouter from "./routes/messageRoutes.js";
 
 //* Initialize constants
 const PORT = process.env.PORT || 8000;
@@ -43,6 +46,9 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/events", eventRouter);
+app.use("/api/v1/members", memberRouter);
+app.use("/api/v1/messages", messageRouter);
 
 // * Override express default handler
 app.use(errorHandler);

@@ -9,10 +9,10 @@ import crypto from "crypto";
 // * @method - POST
 // * @route - /auth/signup
 const signUpUser = async (req, res) => {
-    const {username, email, password} = req.body;
+    const {email, password} = req.body;
 
     // ! handle missing data
-    if (!username || !email || !password) {
+    if (!email || !password) {
         logger.info("Missing data. All data not provided during signup.");
         res.status(400).json({
             status: "error",
@@ -22,7 +22,7 @@ const signUpUser = async (req, res) => {
     }
 
     // ! check if user already exists
-    const user = await User.findOne({username: username});
+    const user = await User.findOne({email: email});
     if (user) {
         res.status(409).json({
             status: "error",
@@ -36,7 +36,6 @@ const signUpUser = async (req, res) => {
 
         // ! create new user
         const userCredentials = new User({
-            username: req.body.username,
             email: req.body.email,
             password: hashPassword,
         });
@@ -51,7 +50,6 @@ const signUpUser = async (req, res) => {
                 message: "User account created successfully.",
                 data: {
                     id: result._id,
-                    username: result.username,
                     email: result.email,
                 },
             });
@@ -72,9 +70,9 @@ const signUpUser = async (req, res) => {
 // * @method - POST
 // * @route - /auth/login
 const loginUser = async (req, res) => {
-    const {username, password} = req.body;
+    const {email, password} = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
         logger.info("Missing data. All data not provided during login.");
         res.status(400).json({
             status: "error",
@@ -83,7 +81,7 @@ const loginUser = async (req, res) => {
     }
 
     // ! check if user exists
-    const user = await User.findOne({username: username});
+    const user = await User.findOne({email: email});
 
     if (user) {
         // ! check if password matches
@@ -96,7 +94,6 @@ const loginUser = async (req, res) => {
                 message: "User authenticated successfully.",
                 data: {
                     id: user._id,
-                    username: user.username,
                     email: user.email,
                     access_token: token,
                 },
